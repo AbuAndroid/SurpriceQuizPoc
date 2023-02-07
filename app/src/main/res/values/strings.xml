@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SurpriceQuizPoc</string>
+    <string name="str_save">Save</string>
+    <string name="str_cancel">Quiz Title</string>
+    <string name="str_quiz_title">Quiz Title</string>
+    <string name="str_text_cancel">Cancel</string>
+</resources>
