@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="10dp"
+    android:layout_marginHorizontal="10dp"
     app:cardCornerRadius="10dp">
+
     <View
         android:id="@+id/view"
         android:layout_width="10dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/button_background_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,7 +19,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/uiTiQuestionTitle"
@@ -41,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
+            android:scrollbars="vertical"
             tools:listitem="@layout/options_create_custom_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/uiBtAddOption"
@@ -59,8 +62,8 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="10dp"
             android:textColor="@color/black"
+            android:paddingHorizontal="20dp"
             android:background="@drawable/add_new_questio_background"
-            android:padding="10dp"
             android:drawableStart="@drawable/ic_baseline_add"
             android:text="Add Option" />
 
@@ -69,6 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginVertical="10dp"
+            android:background="@color/light_grey"
+            android:layout_marginHorizontal="20dp"
             app:layout_constraintStart_toStartOf="@+id/uiBtAddOption"
             app:layout_constraintTop_toBottomOf="@+id/uiBtAddOption"
             app:layout_constraintEnd_toEndOf="@+id/uiBtAddOption"/>
@@ -78,21 +83,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginVertical="20dp"
             android:text="Set Answer Key"
             android:textColor="@color/button_background_blue"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/uiLine" />
+            app:layout_constraintTop_toBottomOf="@id/uiLine"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/uiIvAdd"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginStart="120dp"
-            app:layout_constraintBottom_toBottomOf="@+id/uiTvSetAnswerKey"
-            app:layout_constraintStart_toEndOf="@+id/uiTvSetAnswerKey"
-            app:layout_constraintTop_toTopOf="@+id/uiTvSetAnswerKey"
+            app:layout_constraintBottom_toBottomOf="@+id/uiIvCopy"
+            app:layout_constraintEnd_toStartOf="@+id/uiIvCopy"
+            app:layout_constraintTop_toTopOf="@+id/uiIvCopy"
             app:srcCompat="@drawable/ic_baseline_add" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -100,9 +105,9 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginHorizontal="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/uiIvAdd"
-            app:layout_constraintStart_toEndOf="@+id/uiIvAdd"
-            app:layout_constraintTop_toTopOf="@+id/uiIvAdd"
+            app:layout_constraintBottom_toBottomOf="@+id/uiIvDelete"
+            app:layout_constraintEnd_toStartOf="@+id/uiIvDelete"
+            app:layout_constraintTop_toTopOf="@+id/uiIvDelete"
             app:srcCompat="@drawable/ic_baseline_content_copy" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -110,11 +115,10 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginHorizontal="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/uiIvCopy"
-            app:layout_constraintStart_toEndOf="@+id/uiIvCopy"
-            app:layout_constraintTop_toTopOf="@+id/uiIvCopy"
+            app:layout_constraintTop_toTopOf="@+id/uiLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_baseline_delete" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
