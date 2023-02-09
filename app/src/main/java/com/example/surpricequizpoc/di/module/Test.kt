@@ -18,6 +18,6 @@ val repoModule = module {
 
 val viewModelModule = module {
     viewModel{
-        QuizViewModel(get())
+        QuizViewModel()
     }
 }

@@ -30,6 +30,8 @@ class OptionContentAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val layoutposition = optionList[position]
         with(holder){
+            uiEtoption.hint = "option ${position+1} : "
+            uiEtoption.setText(layoutposition.option)
             uiRbOptions.isChecked = layoutposition.isAnswer
         }
     }
@@ -38,18 +40,18 @@ class OptionContentAdapter(
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val uiRbOptions:RadioButton = itemView.findViewById(R.id.uiRbOptions)
         val uiEtoption:EditText = itemView.findViewById(R.id.uiEtoption)
-        val uiIvClearQuestion:ImageView = itemView.findViewById(R.id.uiIvClearQuestion)
+        val uiIvDeleteOption:ImageView = itemView.findViewById(R.id.uiIvClearQuestion)
 
         init {
-            uiIvClearQuestion.setOnClickListener {
+            uiIvDeleteOption.setOnClickListener {
+
                 deleteOptionItem(adapterPosition)
                 notifyDataSetChanged()
             }
 
             uiEtoption.doAfterTextChanged {
-                optionList[adapterPosition].option = it.toString()
                 onOptionTitleChange(it.toString(),adapterPosition)
-                Log.e("op",optionList[adapterPosition].toString())
+                //notifyDataSetChanged()
             }
         }
 
