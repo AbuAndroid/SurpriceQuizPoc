@@ -8,6 +8,7 @@
     tools:context=".ui.QuizActivity">
 
     <!--Toolbar -->
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/uiToolbar"
         android:layout_width="match_parent"
@@ -15,14 +16,14 @@
         android:background="@drawable/appbarbackground"
         android:backgroundTint="#147AFC"
         android:backgroundTintMode="multiply"
-        app:layout_constraintBottom_toTopOf="@+id/uiCvCard"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/uiIvBackArrow"
@@ -95,7 +96,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!--question recyclerview -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/uiRvQuestion"
         android:layout_width="match_parent"
@@ -114,13 +114,16 @@
         android:id="@+id/uiBtAddQuestions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="10dp"
         android:background="@drawable/add_new_questio_background"
         android:text="+ Add New Question"
+        android:textSize="12sp"
         android:textColor="@color/button_background_blue"
-        app:layout_constraintStart_toStartOf="@+id/uiRvQuestion"
+        app:layout_constraintBottom_toTopOf="@+id/uiCvCardBottom"
         app:layout_constraintEnd_toEndOf="@+id/uiRvQuestion"
-        app:layout_constraintBottom_toTopOf="@+id/uiCvCardBottom"/>
+        app:layout_constraintStart_toStartOf="@+id/uiRvQuestion"
+        app:layout_constraintTop_toBottomOf="@+id/uiRvQuestion" />
 
     <!--save OR cancel button -->
     <androidx.cardview.widget.CardView
@@ -128,6 +131,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@+id/uiBtAddQuestions"
         app:layout_constraintStart_toStartOf="@+id/uiBtAddQuestions"
         app:layout_constraintEnd_toEndOf="@+id/uiBtAddQuestions"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -159,11 +163,13 @@
                 android:background="@drawable/button_background"
                 android:text="@string/str_save"
                 android:textColor="@color/white"
+                android:layout_marginHorizontal="10dp"
                 app:layout_constraintBottom_toBottomOf="@+id/uiBtCancel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/uiBtCancel"
                 app:layout_constraintTop_toTopOf="@+id/uiBtCancel" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -83,7 +83,7 @@ class QuizViewModel() : ViewModel() {
                 options.isAnswer=true
             }
         }
-        //quizDataListLd.value = questionList
+        quizDataListLd.value = questionList
 
     }
 

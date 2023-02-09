@@ -45,11 +45,13 @@
             android:id="@+id/uiTvBtmQuestionName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:layout_marginHorizontal="20dp"
             android:layout_marginVertical="30dp"
+            android:text="TextView"
+            android:textSize="20dp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/uiLine"
-            app:layout_constraintTop_toBottomOf="@+id/uiLine"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/uiLine" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/uiRvBtmOptionSelect"

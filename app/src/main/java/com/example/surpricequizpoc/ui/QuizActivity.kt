@@ -27,7 +27,7 @@ class QuizActivity : AppCompatActivity() {
 
     private var quizContentAdapter: QuizContentAdapter? = null
 
-    private var optionListBottomList:OptionListBottomList?=null
+    private var optionListBottomList: OptionListBottomList? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,28 +93,28 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun copyQuestion(questionCardPosition: Int, questions: Questions) {
-        quizViewModel.copyQuestion(questionCardPosition,questions)
+        quizViewModel.copyQuestion(questionCardPosition, questions)
     }
 
     private fun onOptionSelected(questionPosition: Int, optionPosition: Int) {
-        quizViewModel.onOptionSelected(questionPosition,optionPosition)
+        quizViewModel.onOptionSelected(questionPosition, optionPosition)
     }
 
     private fun setAnswerKey(questionPosition: Int) {
-        val question =  quizViewModel.quizDataList.value
+        val question = quizViewModel.quizDataList.value
         question?.get(questionPosition)?.let { Log.e("listData", it.options.toString()) }
 
         optionListBottomList = OptionListBottomList(
             optionList = question?.get(questionPosition)?.options ?: mutableListOf(),
-            onOptionSelected = {option->
-                onOoptionSelectedFromBottomList(questionPosition,option)
+            onOptionSelected = { option ->
+                onOoptionSelectedFromBottomList(questionPosition, option)
             }
         )
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.options_select_bottomsheet, null)
         val btnClose = view.findViewById<ImageView>(R.id.uiIvBottomCloseClose)
         val questionTitle = view.findViewById<TextView>(R.id.uiTvBtmQuestionName)
-        questionTitle.text = question?.get(questionPosition)?.questionTitle ?: ""
+        questionTitle.text ="${questionPosition+1}, "+ question?.get(questionPosition)?.questionTitle ?: ""
         btnClose.setOnClickListener {
             dialog.dismiss()
         }
@@ -125,8 +125,8 @@ class QuizActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun onOoptionSelectedFromBottomList(questionPosition:Int,optionPosition: Int) {
-        quizViewModel.onOptionSelected(questionPosition,optionPosition)
+    private fun onOoptionSelectedFromBottomList(questionPosition: Int, optionPosition: Int) {
+        quizViewModel.onOptionSelected(questionPosition, optionPosition)
     }
 
 

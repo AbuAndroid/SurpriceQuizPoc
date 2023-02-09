@@ -12,6 +12,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surpricequizpoc.R
 import com.example.surpricequizpoc.model.Questions
+import com.google.android.material.textfield.TextInputLayout
 
 class QuizContentAdapter(
     private val questionList: MutableList<Questions>,
@@ -38,7 +39,7 @@ class QuizContentAdapter(
         val questionPosition = questionList[position]
 
         with(holder) {
-            uiEtQuestionName.hint = "${position + 1} Question Name : "
+            uiTiQuestionLable.hint = "${position + 1} Question Name : "
             uiEtQuestionName.setText(questionPosition.questionTitle)
 
             uiRvOptions.adapter = OptionContentAdapter(
@@ -67,6 +68,7 @@ class QuizContentAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val uiTiQuestionLable :TextInputLayout = itemView.findViewById(R.id.uiTiQuestionTitle)
         val uiEtQuestionName: EditText = itemView.findViewById(R.id.uiEtQuizName)
         val uiRvOptions: RecyclerView = itemView.findViewById(R.id.uiRvOptions)
         private val uiBtAddOption: Button = itemView.findViewById(R.id.uiBtAddOption)
@@ -78,7 +80,9 @@ class QuizContentAdapter(
         init {
             uiBtAddOption.setOnClickListener {
                 addNewOption(adapterPosition)
-                notifyDataSetChanged()
+             //   notifyDataSetChanged()
+                notifyItemInserted(adapterPosition)
+             //   notifyItemChanged(adapterPosition)
             }
 
             uiIvAdd.setOnClickListener {
@@ -93,7 +97,8 @@ class QuizContentAdapter(
 
             uiIvDelete.setOnClickListener {
                 deleteQuestion(adapterPosition)
-                notifyDataSetChanged()
+              //  notifyDataSetChanged()
+                notifyItemRemoved(adapterPosition)
             }
         }
     }
