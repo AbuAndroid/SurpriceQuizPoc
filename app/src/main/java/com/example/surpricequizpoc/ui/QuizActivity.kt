@@ -3,9 +3,17 @@ package com.example.surpricequizpoc.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
+import com.example.surpricequizpoc.R
+import com.example.surpricequizpoc.adapter.OptionListBottomList
 import com.example.surpricequizpoc.adapter.QuizContentAdapter
 import com.example.surpricequizpoc.databinding.ActivityMainBinding
 import com.example.surpricequizpoc.model.Questions
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,6 +27,7 @@ class QuizActivity : AppCompatActivity() {
 
     private var quizContentAdapter: QuizContentAdapter? = null
 
+    private var optionListBottomList:OptionListBottomList?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +53,14 @@ class QuizActivity : AppCompatActivity() {
             questionTitleChange = ::onQuestionTitleChange,
             optionTitleChange = ::onOptionTextChange,
             addAnotherQuestion = ::addAnotherOption,
-            copyQuestion = ::copyQuestion
+            copyQuestion = ::copyQuestion,
+            onOptionSelected = ::onOptionSelected,
+            setAnswerKey = ::setAnswerKey
         )
         binding.uiRvQuestion.adapter = quizContentAdapter
+        (binding.uiRvQuestion.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
     }
+
 
     private fun setUpListener() {
         binding.uiBtAddQuestions.setOnClickListener {
@@ -82,4 +95,39 @@ class QuizActivity : AppCompatActivity() {
     private fun copyQuestion(questionCardPosition: Int, questions: Questions) {
         quizViewModel.copyQuestion(questionCardPosition,questions)
     }
+
+    private fun onOptionSelected(questionPosition: Int, optionPosition: Int) {
+        quizViewModel.onOptionSelected(questionPosition,optionPosition)
+    }
+
+    private fun setAnswerKey(questionPosition: Int) {
+        val question =  quizViewModel.quizDataList.value
+        question?.get(questionPosition)?.let { Log.e("listData", it.options.toString()) }
+
+        optionListBottomList = OptionListBottomList(
+            optionList = question?.get(questionPosition)?.options ?: mutableListOf(),
+            onOptionSelected = {option->
+                onOoptionSelectedFromBottomList(questionPosition,option)
+            }
+        )
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.options_select_bottomsheet, null)
+        val btnClose = view.findViewById<ImageView>(R.id.uiIvBottomCloseClose)
+        val questionTitle = view.findViewById<TextView>(R.id.uiTvBtmQuestionName)
+        questionTitle.text = question?.get(questionPosition)?.questionTitle ?: ""
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.setCancelable(false)
+        dialog.setContentView(view)
+        val optionsRv = view.findViewById<RecyclerView>(R.id.uiRvBtmOptionSelect)
+        optionsRv.adapter = optionListBottomList
+        dialog.show()
+    }
+
+    private fun onOoptionSelectedFromBottomList(questionPosition:Int,optionPosition: Int) {
+        quizViewModel.onOptionSelected(questionPosition,optionPosition)
+    }
+
+
 }

@@ -90,7 +90,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/uiTvQuizTitle"
                 app:layout_constraintStart_toStartOf="@id/uiTvQuizTitle"
                 app:layout_constraintTop_toBottomOf="@+id/uiTvQuizTitle"
-                tools:ignore="DuplicateSpeakableTextCheck" />
+                tools:ignore="DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

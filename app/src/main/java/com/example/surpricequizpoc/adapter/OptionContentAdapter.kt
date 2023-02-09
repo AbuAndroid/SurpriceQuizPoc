@@ -12,12 +12,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surpricequizpoc.R
 import com.example.surpricequizpoc.model.Options
+import java.security.cert.PKIXRevocationChecker.Option
 
 
 class OptionContentAdapter(
     private val optionList : MutableList<Options>,
     private val deleteOptionItem : (Int)->Unit,
-    private val onOptionTitleChange: (String,Int) -> Unit
+    private val onOptionTitleChange: (String,Int) -> Unit,
+    private val onOptionSelected:(Int)-> Unit
 ): RecyclerView.Adapter<OptionContentAdapter.ViewHolder>() {
 
 
@@ -43,20 +45,20 @@ class OptionContentAdapter(
         val uiIvDeleteOption:ImageView = itemView.findViewById(R.id.uiIvClearQuestion)
 
         init {
+            uiRbOptions.setOnClickListener {
+                onOptionSelected(adapterPosition)
+                notifyDataSetChanged()
+            }
             uiIvDeleteOption.setOnClickListener {
-
                 deleteOptionItem(adapterPosition)
                 notifyDataSetChanged()
             }
 
             uiEtoption.doAfterTextChanged {
                 onOptionTitleChange(it.toString(),adapterPosition)
-                //notifyDataSetChanged()
             }
         }
-
     }
-
 
     override fun getItemCount(): Int {
         return optionList.size
