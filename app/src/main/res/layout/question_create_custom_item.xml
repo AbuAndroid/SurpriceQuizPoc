@@ -12,10 +12,7 @@
         android:id="@+id/view"
         android:layout_width="5dp"
         android:layout_height="match_parent"
-        android:background="@color/button_background_blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@color/button_background_blue" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,6 +20,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/uiTiQuestionTitle"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="OutlinedBox"
+            app:boxStrokeColor="@color/button_background_blue"
+            android:textColorHint="@color/button_background_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -63,6 +64,7 @@
             android:layout_marginVertical="10dp"
             android:textColor="@color/black"
             android:paddingHorizontal="20dp"
+            android:textSize="12sp"
             android:background="@drawable/add_new_questio_background"
             android:drawableStart="@drawable/ic_baseline_add"
             android:text="Add Option" />
@@ -92,8 +94,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/uiIvAdd"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginHorizontal="20dp"
             app:layout_constraintBottom_toBottomOf="@+id/uiIvCopy"
             app:layout_constraintEnd_toStartOf="@+id/uiIvCopy"
@@ -102,8 +104,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/uiIvCopy"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginHorizontal="20dp"
             app:layout_constraintBottom_toBottomOf="@+id/uiIvDelete"
             app:layout_constraintEnd_toStartOf="@+id/uiIvDelete"
@@ -112,8 +114,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/uiIvDelete"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginHorizontal="20dp"
             app:layout_constraintTop_toTopOf="@+id/uiLine"
             app:layout_constraintBottom_toBottomOf="parent"

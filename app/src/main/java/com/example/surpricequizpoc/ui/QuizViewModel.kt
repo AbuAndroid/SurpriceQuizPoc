@@ -75,5 +75,17 @@ class QuizViewModel() : ViewModel() {
         quizDataListLd.value = questionList
     }
 
+    fun onOptionSelected(questions: Int, optionPosition: Int) {
+        val question = questionList[questions]
+        question.options.forEachIndexed { index,options ->
+            options.isAnswer= false
+            if(index==optionPosition){
+                options.isAnswer=true
+            }
+        }
+        quizDataListLd.value = questionList
+
+    }
+
 
 }

@@ -12,22 +12,25 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surpricequizpoc.R
 import com.example.surpricequizpoc.model.Questions
+import com.google.android.material.textfield.TextInputLayout
 
 class QuizContentAdapter(
-    private val questionList : MutableList<Questions>,
-    private val addNewOption : (Int)-> Unit,
-    private val deleteOption : (Int,Int)-> Unit,
-    private val deleteQuestion : (Int)-> Unit,
-    private val questionTitleChange : (String,Int)-> Unit,
-    private val optionTitleChange : (String,Int,Int) -> Unit,
-    private val addAnotherQuestion : () -> Unit,
-    private val copyQuestion : (Int, Questions)-> Unit
-):RecyclerView.Adapter<QuizContentAdapter.ViewHolder>() {
+    private val questionList: MutableList<Questions>,
+    private val addNewOption: (Int) -> Unit,
+    private val deleteOption: (Int, Int) -> Unit,
+    private val deleteQuestion: (Int) -> Unit,
+    private val questionTitleChange: (String, Int) -> Unit,
+    private val optionTitleChange: (String, Int, Int) -> Unit,
+    private val addAnotherQuestion: () -> Unit,
+    private val copyQuestion: (Int, Questions) -> Unit,
+    private val onOptionSelected: (Int, Int) -> Unit,
+    private val setAnswerKey : (Int)-> Unit
+) : RecyclerView.Adapter<QuizContentAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-       val layoutInflater = LayoutInflater.from(parent.context)
-           .inflate(R.layout.question_create_custom_item,parent,false)
+        val layoutInflater = LayoutInflater.from(parent.context)
+            .inflate(R.layout.question_create_custom_item, parent, false)
         return ViewHolder(layoutInflater)
     }
 
@@ -35,55 +38,68 @@ class QuizContentAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val questionPosition = questionList[position]
 
-        with(holder){
-            uiEtQuestionName.hint = "${position+1} Question Name : "
+        with(holder) {
+            uiTiQuestionLable.hint = "${position + 1} Question Name : "
             uiEtQuestionName.setText(questionPosition.questionTitle)
+
             uiRvOptions.adapter = OptionContentAdapter(
                 optionList = questionPosition.options,
-                deleteOptionItem =  {optionPosition ->
-                    deleteOption(position,optionPosition)
+                deleteOptionItem = { optionPosition ->
+                    deleteOption(position, optionPosition)
+                    notifyDataSetChanged()
                 },
-                onOptionTitleChange = {optionText,optionPosition->
-                    optionTitleChange(optionText,position,optionPosition)
+                onOptionTitleChange = { optionText, optionPosition ->
+                    optionTitleChange(optionText, position, optionPosition)
+                },
+                onOptionSelected = { option ->
+                    onOptionSelected(position, option)
+                    notifyItemChanged(position)
                 }
             )
+        }
+        holder.uiEtQuestionName.doAfterTextChanged {
+            questionTitleChange(it.toString(), position)
+        }
+
+        holder.uiTvSetAnswerKey.setOnClickListener {
+            setAnswerKey(position)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
-       // val uiTiQuestionTitle:TextView = itemView.findViewById(R.id.uiTiQuestionTitle)
-        val uiEtQuestionName:EditText = itemView.findViewById(R.id.uiEtQuizName)
-        val uiRvOptions:RecyclerView = itemView.findViewById(R.id.uiRvOptions)
-        private val uiBtAddOption:Button = itemView.findViewById(R.id.uiBtAddOption)
-        val uiTvSetAnswerKey:TextView = itemView.findViewById(R.id.uiTvSetAnswerKey)
-        private val uiIvAdd:ImageView = itemView.findViewById(R.id.uiIvAdd)
-        private val uiIvCopy:ImageView = itemView.findViewById(R.id.uiIvCopy)
-        private val uiIvDelete:ImageView = itemView.findViewById(R.id.uiIvDelete)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val uiTiQuestionLable :TextInputLayout = itemView.findViewById(R.id.uiTiQuestionTitle)
+        val uiEtQuestionName: EditText = itemView.findViewById(R.id.uiEtQuizName)
+        val uiRvOptions: RecyclerView = itemView.findViewById(R.id.uiRvOptions)
+        private val uiBtAddOption: Button = itemView.findViewById(R.id.uiBtAddOption)
+        val uiTvSetAnswerKey: TextView = itemView.findViewById(R.id.uiTvSetAnswerKey)
+        private val uiIvAdd: ImageView = itemView.findViewById(R.id.uiIvAdd)
+        private val uiIvCopy: ImageView = itemView.findViewById(R.id.uiIvCopy)
+        private val uiIvDelete: ImageView = itemView.findViewById(R.id.uiIvDelete)
 
-        init{
+        init {
             uiBtAddOption.setOnClickListener {
                 addNewOption(adapterPosition)
-                notifyDataSetChanged()
-            }
-
-            uiEtQuestionName.doAfterTextChanged {
-                questionTitleChange(it.toString(),adapterPosition)
+             //   notifyDataSetChanged()
+                notifyItemInserted(adapterPosition)
+             //   notifyItemChanged(adapterPosition)
             }
 
             uiIvAdd.setOnClickListener {
                 addAnotherQuestion()
+                notifyDataSetChanged()
             }
 
             uiIvCopy.setOnClickListener {
-                copyQuestion(adapterPosition,questionList[adapterPosition])
+                copyQuestion(adapterPosition, questionList[adapterPosition])
+                notifyDataSetChanged()
             }
 
             uiIvDelete.setOnClickListener {
                 deleteQuestion(adapterPosition)
-                notifyDataSetChanged()
+              //  notifyDataSetChanged()
+                notifyItemRemoved(adapterPosition)
             }
-
         }
     }
 
