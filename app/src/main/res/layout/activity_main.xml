@@ -4,20 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.QuizActivity"
-    android:background="#E5E5E5">
+    android:background="#E5E5E5"
+    tools:context=".ui.QuizActivity">
 
+    <!--Toolbar -->
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/uiToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/uiToolbar"
-        android:backgroundTintMode="multiply"
         android:background="@drawable/appbarbackground"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="#147AFC"
+        android:backgroundTintMode="multiply"
         app:layout_constraintBottom_toTopOf="@+id/uiCvCard"
-        android:backgroundTint="#147AFC">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -49,6 +50,7 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <!--question title -->
     <androidx.cardview.widget.CardView
         android:id="@+id/uiCvCard"
         android:layout_width="match_parent"
@@ -74,7 +76,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/uiEtQuestionName"
+                android:id="@+id/uiEtQuizName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
@@ -93,62 +95,42 @@
 
     </androidx.cardview.widget.CardView>
 
-    <ScrollView
-        android:id="@+id/uiSvDetailts"
+    <!--question recyclerview -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/uiRvQuestion"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="@+id/uiCvCard"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/uiBtAddQuestions"
         app:layout_constraintEnd_toEndOf="@+id/uiCvCard"
+        app:layout_constraintStart_toStartOf="@+id/uiCvCard"
         app:layout_constraintTop_toBottomOf="@+id/uiCvCard"
-        app:layout_constraintBottom_toTopOf="@+id/uiCvCardBottom">
+        tools:listitem="@layout/question_create_custom_item" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/uiRvQuestion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginVertical="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/uiBtAddQuestions"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/question_create_custom_item">
+    <!--Add button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/uiBtAddQuestions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/add_new_questio_background"
+        android:text="+ Add New Question"
+        android:textColor="@color/button_background_blue"
+        app:layout_constraintStart_toStartOf="@+id/uiRvQuestion"
+        app:layout_constraintEnd_toEndOf="@+id/uiRvQuestion"
+        app:layout_constraintBottom_toTopOf="@+id/uiCvCardBottom"/>
 
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/uiBtAddQuestions"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="+ Add New Question"
-                android:layout_marginVertical="10dp"
-                android:background="@drawable/add_new_questio_background"
-                android:textColor="@color/button_background_blue"
-                app:layout_constraintTop_toBottomOf="@+id/uiRvQuestion"
-                app:layout_constraintStart_toStartOf="@+id/uiRvQuestion"
-                app:layout_constraintEnd_toEndOf="@+id/uiRvQuestion"
-                app:layout_constraintBottom_toBottomOf="parent"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-
-
+    <!--save OR cancel button -->
     <androidx.cardview.widget.CardView
         android:id="@+id/uiCvCardBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@+id/uiSvDetailts"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="@+id/uiBtAddQuestions"
+        app:layout_constraintEnd_toEndOf="@+id/uiBtAddQuestions"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -156,14 +138,14 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/uiBtCancel"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:layout_marginVertical="20dp"
+                android:layout_marginVertical="10dp"
                 android:background="@drawable/transparent_button_background"
                 android:text="@string/str_text_cancel"
                 android:textColor="@color/button_background_blue"
-                style="?android:attr/borderlessButtonStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/uiBtSave"
                 app:layout_constraintStart_toStartOf="parent"
@@ -171,12 +153,12 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/uiBtSave"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_background"
                 android:text="@string/str_save"
                 android:textColor="@color/white"
-                style="?android:attr/borderlessButtonStyle"
                 app:layout_constraintBottom_toBottomOf="@+id/uiBtCancel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/uiBtCancel"
