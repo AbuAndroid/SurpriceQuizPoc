@@ -24,11 +24,11 @@
             android:hint="OutlinedBox"
             app:boxStrokeColor="@color/button_background_blue"
             android:textColorHint="@color/button_background_blue"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/uiIvPickImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -39,18 +39,42 @@
                  />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/uiIvPickImage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/uiTiQuestionTitle"
+            app:layout_constraintBottom_toBottomOf="@+id/uiTiQuestionTitle"
+            app:srcCompat="@drawable/ic_baseline_image_24" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/uiIvQuestionImage"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginVertical="10dp"
+           android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/uiRvOptions"
+            app:layout_constraintStart_toStartOf="@+id/uiTiQuestionTitle"
+            app:layout_constraintTop_toBottomOf="@+id/uiTiQuestionTitle"
+            app:layout_constraintEnd_toEndOf="@+id/uiIvPickImage"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/uiRvOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:scrollbars="vertical"
-            tools:listitem="@layout/options_create_custom_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/uiBtAddOption"
             app:layout_constraintEnd_toEndOf="@+id/uiTiQuestionTitle"
+
             app:layout_constraintStart_toStartOf="@+id/uiTiQuestionTitle"
-            app:layout_constraintTop_toBottomOf="@id/uiTiQuestionTitle">
+            app:layout_constraintTop_toBottomOf="@id/uiIvQuestionImage"
+            tools:listitem="@layout/options_create_custom_item">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -58,16 +82,16 @@
             android:id="@+id/uiBtAddOption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/uiRvOptions"
-            app:layout_constraintTop_toBottomOf="@id/uiRvOptions"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="30dp"
             android:layout_marginVertical="10dp"
-            android:textColor="@color/black"
-            android:paddingHorizontal="20dp"
-            android:textSize="12sp"
             android:background="@drawable/add_new_questio_background"
             android:drawableStart="@drawable/ic_baseline_add"
-            android:text="Add Option" />
+            android:paddingHorizontal="20dp"
+            android:text="Add Option"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/uiRvOptions"
+            app:layout_constraintTop_toBottomOf="@id/uiRvOptions" />
 
         <View
             android:id="@+id/uiLine"
