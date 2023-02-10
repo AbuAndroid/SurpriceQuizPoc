@@ -28,17 +28,28 @@
         android:textSize="16sp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/uiRgOptions"
-        app:layout_constraintEnd_toStartOf="@+id/uiIvClearQuestion"
+        app:layout_constraintEnd_toStartOf="@+id/uiIvOptionImage"
         app:layout_constraintStart_toEndOf="@id/uiRgOptions"
         app:layout_constraintTop_toTopOf="@id/uiRgOptions" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/uiIvOptionImage"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintStart_toEndOf="@+id/uiEtoption"
+        app:layout_constraintTop_toTopOf="@+id/uiIvClearQuestion"
+        app:layout_constraintBottom_toBottomOf="@+id/uiIvClearQuestion"
+        app:layout_constraintEnd_toStartOf="@+id/uiIvClearQuestion"
+        app:srcCompat="@drawable/ic_baseline_image_24" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/uiIvClearQuestion"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        app:layout_constraintTop_toTopOf="@id/uiEtoption"
-        app:layout_constraintBottom_toBottomOf="@id/uiEtoption"
-        app:layout_constraintStart_toEndOf="@id/uiEtoption"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_close" />
 

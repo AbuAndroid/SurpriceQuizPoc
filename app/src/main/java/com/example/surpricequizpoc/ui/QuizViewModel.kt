@@ -1,5 +1,6 @@
 package com.example.surpricequizpoc.ui
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,6 +23,7 @@ class QuizViewModel : ViewModel() {
         val question = Questions(
             questionId = System.currentTimeMillis().toString(),
             questionTitle = "",
+            questionImage = "",
             options = mutableListOf(
                 Options(
                     optionId = System.currentTimeMillis().toString(),
@@ -41,6 +43,12 @@ class QuizViewModel : ViewModel() {
         quizDataListLd.value = questionList
     }
 
+
+    fun addQuestionImage(questionPosition: Int, questionImage: Uri) {
+        val question = questionList[questionPosition]
+        question.questionImage = questionImage.toString()
+        quizDataListLd.value = questionList
+    }
     fun removeOption(questionPosition: Int, optionPosition: Int) {
         questionList[questionPosition].options.removeAt(optionPosition)
         quizDataListLd.value = questionList
@@ -70,11 +78,11 @@ class QuizViewModel : ViewModel() {
                 option = option.option,
                 isAnswer = option.isAnswer
             )
-
         }
         val questionCard = Questions(
             questionId = System.currentTimeMillis().toString(),
             questionTitle = questions.questionTitle,
+            questionImage = "",
             options = optionList.toMutableList()
         )
         questionList.add(questionCardPosition+1,questionCard)
@@ -92,4 +100,5 @@ class QuizViewModel : ViewModel() {
         }
         quizDataListLd.value = questionList
     }
+
 }

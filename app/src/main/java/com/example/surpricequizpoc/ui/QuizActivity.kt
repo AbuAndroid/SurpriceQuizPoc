@@ -1,12 +1,14 @@
 package com.example.surpricequizpoc.ui
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.surpricequizpoc.R
@@ -30,10 +32,17 @@ class QuizActivity : AppCompatActivity() {
 
     private var setAnswerKeyAdapter: setAnswerKeyAdapter? = null
 
+    var questionImage:Uri?=null
+    private val resultPermissionLauncher by lazy {
+        registerForActivityResult(ActivityResultContracts.GetContent()){
+            questionImage=it
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        resultPermissionLauncher
         setUpObserver()
         setUpListener()
     }
@@ -55,7 +64,8 @@ class QuizActivity : AppCompatActivity() {
             addAnotherQuestion = ::addQuestion,
             copyQuestion = ::copyQuestion,
             onOptionSelected = ::onOptionSelected,
-            setAnswerKey = ::setAnswerKey
+            setAnswerKey = ::setAnswerKey,
+            getQuestionImage = ::getQuestionImage
         )
 
 
@@ -73,6 +83,10 @@ class QuizActivity : AppCompatActivity() {
                 else
                     Toast.makeText(this,"You are only allowed to Create Only 4 Questions ",Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.uiBtCancel.setOnClickListener {
+             resultPermissionLauncher.launch("image/*")
         }
 
     }
@@ -125,6 +139,13 @@ class QuizActivity : AppCompatActivity() {
     private fun onOptionSelected(questionPosition: Int, optionPosition: String) {
         quizViewModel.onOptionSelected(questionPosition, optionPosition)
     }
+
+    private fun getQuestionImage(questionPostion: Int) {
+        resultPermissionLauncher.launch("image/*")
+        questionImage?.let { quizViewModel.addQuestionImage(questionPostion, questionImage = it) }
+        Toast.makeText(this@QuizActivity,questionPostion.toString(),Toast.LENGTH_SHORT).show()
+    }
+
 
     @SuppressLint("InflateParams")
     private fun setAnswerKey(questionPosition: Int) {

@@ -1,6 +1,8 @@
 package com.example.surpricequizpoc.adapter
 
 import android.annotation.SuppressLint
+import android.media.Image
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +10,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surpricequizpoc.R
 import com.example.surpricequizpoc.model.Questions
 import com.google.android.material.textfield.TextInputLayout
+import kotlin.reflect.KFunction0
 
 class QuestionAdapter(
     private val questionList: MutableList<Questions>,
@@ -24,7 +28,8 @@ class QuestionAdapter(
     private val addAnotherQuestion: () -> Unit,
     private val copyQuestion: (Int, Questions) -> Unit,
     private val onOptionSelected: (Int, String) -> Unit,
-    private val setAnswerKey : (Int)-> Unit
+    private val setAnswerKey: (Int)-> Unit,
+    private val getQuestionImage: (Int)->Unit
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,6 +45,7 @@ class QuestionAdapter(
         with(holder) {
             uiTiQuestionLable.hint = "${position + 1} Question Name : "
             uiEtQuestionName.setText(questionPosition.questionTitle)
+            uiIvQuestionImage.setImageURI(questionPosition.questionImage?.toUri())
             uiRvOptions.adapter = OptionsAdapter(
                 optionList = questionPosition.options,
                 deleteOptionItem = { optionPosition ->
@@ -59,10 +65,15 @@ class QuestionAdapter(
                 setAnswerKey(position)
             }
         }
+        if(questionList[position].questionImage?.isNotEmpty() == true)
+            holder.uiIvQuestionImage.visibility= View.VISIBLE
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val uiIvPickImage:ImageView = itemView.findViewById(R.id.uiIvPickImage)
+        val uiIvQuestionImage:ImageView = itemView.findViewById(R.id.uiIvQuestionImage)
         val uiTiQuestionLable :TextInputLayout = itemView.findViewById(R.id.uiTiQuestionTitle)
         val uiEtQuestionName: EditText = itemView.findViewById(R.id.uiEtQuizName)
         val uiRvOptions: RecyclerView = itemView.findViewById(R.id.uiRvOptions)
@@ -91,6 +102,11 @@ class QuestionAdapter(
             uiIvDelete.setOnClickListener {
                 deleteQuestion(adapterPosition)
                 notifyDataSetChanged()
+            }
+
+            uiIvPickImage.setOnClickListener {
+                getQuestionImage(adapterPosition)
+//                notifyItemInserted(adapterPosition)
             }
         }
     }
