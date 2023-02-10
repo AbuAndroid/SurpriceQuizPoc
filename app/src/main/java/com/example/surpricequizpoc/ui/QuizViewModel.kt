@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.surpricequizpoc.model.Options
 import com.example.surpricequizpoc.model.Questions
 
-class QuizViewModel() : ViewModel() {
+class QuizViewModel : ViewModel() {
 
     private var quizDataListLd = MutableLiveData<List<Questions>>()
 
@@ -15,14 +15,16 @@ class QuizViewModel() : ViewModel() {
     private var questionList = mutableListOf<Questions>()
 
     init {
-        getQuiz()
+        addQuiz()
     }
 
-    fun getQuiz() {
+    fun addQuiz() {
         val question = Questions(
+            questionId = System.currentTimeMillis().toString(),
             questionTitle = "",
             options = mutableListOf(
                 Options(
+                    optionId = System.currentTimeMillis().toString(),
                     option = "",
                     isAnswer = false
                 )
@@ -34,7 +36,7 @@ class QuizViewModel() : ViewModel() {
 
     fun addOption(questionPosition: Int) {
         val question = questionList[questionPosition]
-        val option = Options(option = "",isAnswer = false)
+        val option = Options(optionId = System.currentTimeMillis().toString(),option = "",isAnswer = false)
         question.options.add(option)
         quizDataListLd.value = questionList
     }
@@ -62,30 +64,32 @@ class QuizViewModel() : ViewModel() {
     }
 
     fun copyQuestion(questionCardPosition: Int, questions: Questions) {
-        val optionList = mutableListOf<Options>()
-        questions.options.forEach { options ->
-            optionList.add(options)
-        }
+        val optionList = questions.options.mapIndexed{index, option->
+            Options(
+                optionId = System.currentTimeMillis().toString()+index,
+                option = option.option,
+                isAnswer = option.isAnswer
+            )
 
+        }
         val questionCard = Questions(
+            questionId = System.currentTimeMillis().toString(),
             questionTitle = questions.questionTitle,
-            options = optionList
+            options = optionList.toMutableList()
         )
         questionList.add(questionCardPosition+1,questionCard)
         quizDataListLd.value = questionList
     }
 
-    fun onOptionSelected(questions: Int, optionPosition: Int) {
+    fun onOptionSelected(questions: Int, optionId: String) {
         val question = questionList[questions]
-        question.options.forEachIndexed { index,options ->
-            options.isAnswer= false
-            if(index==optionPosition){
-                options.isAnswer=true
+
+        question.options.forEach {
+            it.isAnswer = false
+            if(it.optionId == optionId){
+                it.isAnswer=true
             }
         }
         quizDataListLd.value = questionList
-
     }
-
-
 }

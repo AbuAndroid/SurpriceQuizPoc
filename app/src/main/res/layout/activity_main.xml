@@ -8,7 +8,6 @@
     tools:context=".ui.QuizActivity">
 
     <!--Toolbar -->
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/uiToolbar"
         android:layout_width="match_parent"
@@ -51,94 +50,112 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!--question title -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/uiCvCard"
+    <!--ScrollVIew -->
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uiToolbar">
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@+id/uiToolbar"
+        app:layout_constraintEnd_toEndOf="@+id/uiToolbar"
+        app:layout_constraintTop_toBottomOf="@+id/uiToolbar"
+        app:layout_constraintBottom_toTopOf="@+id/uiCvCardBottom">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/uiTvQuizTitle"
+            <!--question title -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/uiCvCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                android:text="@string/str_quiz_title"
+                android:background="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/uiEtQuizName"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/uiTvQuizTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginVertical="10dp"
+                        android:text="@string/str_quiz_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/uiEtQuizName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginVertical="5dp"
+                        android:background="@drawable/edittext_border"
+                        android:hint="@string/str_cancel"
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp"
+                        android:padding="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/uiTvQuizTitle"
+                        app:layout_constraintStart_toStartOf="@id/uiTvQuizTitle"
+                        app:layout_constraintTop_toBottomOf="@+id/uiTvQuizTitle"
+                        tools:ignore="DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/uiRvQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="10dp"
+                android:nestedScrollingEnabled="true"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/uiBtAddQuestions"
+                app:layout_constraintEnd_toEndOf="@+id/uiCvCard"
+                app:layout_constraintStart_toStartOf="@+id/uiCvCard"
+                app:layout_constraintTop_toBottomOf="@+id/uiCvCard"
+                tools:listitem="@layout/question_create_custom_item" />
+
+            <!--Add button -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/uiBtAddQuestions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginVertical="5dp"
-                android:background="@drawable/edittext_border"
-                android:hint="@string/str_cancel"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:padding="10dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/add_new_questio_background"
+                android:text="+ Add New Question"
+                android:textSize="12sp"
+                android:textColor="@color/button_background_blue"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/uiTvQuizTitle"
-                app:layout_constraintStart_toStartOf="@id/uiTvQuizTitle"
-                app:layout_constraintTop_toBottomOf="@+id/uiTvQuizTitle"
-                tools:ignore="DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
+                app:layout_constraintEnd_toEndOf="@+id/uiRvQuestion"
+                app:layout_constraintStart_toStartOf="@+id/uiRvQuestion"
+                app:layout_constraintTop_toBottomOf="@+id/uiRvQuestion" />
+
+            <!--save OR cancel button -->
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/uiRvQuestion"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="10dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/uiBtAddQuestions"
-        app:layout_constraintEnd_toEndOf="@+id/uiCvCard"
-        app:layout_constraintStart_toStartOf="@+id/uiCvCard"
-        app:layout_constraintTop_toBottomOf="@+id/uiCvCard"
-        tools:listitem="@layout/question_create_custom_item" />
-
-    <!--Add button -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/uiBtAddQuestions"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginHorizontal="10dp"
-        android:background="@drawable/add_new_questio_background"
-        android:text="+ Add New Question"
-        android:textSize="12sp"
-        android:textColor="@color/button_background_blue"
-        app:layout_constraintBottom_toTopOf="@+id/uiCvCardBottom"
-        app:layout_constraintEnd_toEndOf="@+id/uiRvQuestion"
-        app:layout_constraintStart_toStartOf="@+id/uiRvQuestion"
-        app:layout_constraintTop_toBottomOf="@+id/uiRvQuestion" />
-
-    <!--save OR cancel button -->
+    </ScrollView>
     <androidx.cardview.widget.CardView
         android:id="@+id/uiCvCardBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@+id/uiBtAddQuestions"
-        app:layout_constraintStart_toStartOf="@+id/uiBtAddQuestions"
-        app:layout_constraintEnd_toEndOf="@+id/uiBtAddQuestions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/uiBtCancel"
@@ -170,6 +187,4 @@
                 app:layout_constraintTop_toTopOf="@+id/uiBtCancel" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

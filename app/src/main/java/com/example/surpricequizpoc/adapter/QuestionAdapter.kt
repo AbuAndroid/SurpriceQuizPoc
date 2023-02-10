@@ -14,7 +14,7 @@ import com.example.surpricequizpoc.R
 import com.example.surpricequizpoc.model.Questions
 import com.google.android.material.textfield.TextInputLayout
 
-class QuizContentAdapter(
+class QuestionAdapter(
     private val questionList: MutableList<Questions>,
     private val addNewOption: (Int) -> Unit,
     private val deleteOption: (Int, Int) -> Unit,
@@ -23,10 +23,9 @@ class QuizContentAdapter(
     private val optionTitleChange: (String, Int, Int) -> Unit,
     private val addAnotherQuestion: () -> Unit,
     private val copyQuestion: (Int, Questions) -> Unit,
-    private val onOptionSelected: (Int, Int) -> Unit,
+    private val onOptionSelected: (Int, String) -> Unit,
     private val setAnswerKey : (Int)-> Unit
-) : RecyclerView.Adapter<QuizContentAdapter.ViewHolder>() {
-
+) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -41,8 +40,7 @@ class QuizContentAdapter(
         with(holder) {
             uiTiQuestionLable.hint = "${position + 1} Question Name : "
             uiEtQuestionName.setText(questionPosition.questionTitle)
-
-            uiRvOptions.adapter = OptionContentAdapter(
+            uiRvOptions.adapter = OptionsAdapter(
                 optionList = questionPosition.options,
                 deleteOptionItem = { optionPosition ->
                     deleteOption(position, optionPosition)
@@ -51,18 +49,15 @@ class QuizContentAdapter(
                 onOptionTitleChange = { optionText, optionPosition ->
                     optionTitleChange(optionText, position, optionPosition)
                 },
-                onOptionSelected = { option ->
-                    onOptionSelected(position, option)
-                    notifyItemChanged(position)
-                }
             )
-        }
-        holder.uiEtQuestionName.doAfterTextChanged {
-            questionTitleChange(it.toString(), position)
-        }
 
-        holder.uiTvSetAnswerKey.setOnClickListener {
-            setAnswerKey(position)
+            uiEtQuestionName.doAfterTextChanged {
+                questionTitleChange(it.toString(), position)
+            }
+
+            uiTvSetAnswerKey.setOnClickListener {
+                setAnswerKey(position)
+            }
         }
     }
 
@@ -71,8 +66,8 @@ class QuizContentAdapter(
         val uiTiQuestionLable :TextInputLayout = itemView.findViewById(R.id.uiTiQuestionTitle)
         val uiEtQuestionName: EditText = itemView.findViewById(R.id.uiEtQuizName)
         val uiRvOptions: RecyclerView = itemView.findViewById(R.id.uiRvOptions)
-        private val uiBtAddOption: Button = itemView.findViewById(R.id.uiBtAddOption)
         val uiTvSetAnswerKey: TextView = itemView.findViewById(R.id.uiTvSetAnswerKey)
+        private val uiBtAddOption: Button = itemView.findViewById(R.id.uiBtAddOption)
         private val uiIvAdd: ImageView = itemView.findViewById(R.id.uiIvAdd)
         private val uiIvCopy: ImageView = itemView.findViewById(R.id.uiIvCopy)
         private val uiIvDelete: ImageView = itemView.findViewById(R.id.uiIvDelete)
@@ -80,9 +75,7 @@ class QuizContentAdapter(
         init {
             uiBtAddOption.setOnClickListener {
                 addNewOption(adapterPosition)
-             //   notifyDataSetChanged()
-                notifyItemInserted(adapterPosition)
-             //   notifyItemChanged(adapterPosition)
+                notifyDataSetChanged()
             }
 
             uiIvAdd.setOnClickListener {
@@ -97,20 +90,12 @@ class QuizContentAdapter(
 
             uiIvDelete.setOnClickListener {
                 deleteQuestion(adapterPosition)
-              //  notifyDataSetChanged()
-                notifyItemRemoved(adapterPosition)
+                notifyDataSetChanged()
             }
         }
     }
 
     override fun getItemCount(): Int {
         return questionList.size
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun onQuestionListChanged(question: MutableList<Questions>) {
-        questionList.clear()
-        questionList.addAll(question)
-        notifyDataSetChanged()
     }
 }

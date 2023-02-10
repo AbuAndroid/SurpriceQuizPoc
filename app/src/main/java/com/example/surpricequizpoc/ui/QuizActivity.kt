@@ -1,16 +1,17 @@
 package com.example.surpricequizpoc.ui
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.surpricequizpoc.R
-import com.example.surpricequizpoc.adapter.OptionListBottomList
-import com.example.surpricequizpoc.adapter.QuizContentAdapter
+import com.example.surpricequizpoc.adapter.setAnswerKeyAdapter
+import com.example.surpricequizpoc.adapter.QuestionAdapter
 import com.example.surpricequizpoc.databinding.ActivityMainBinding
 import com.example.surpricequizpoc.model.Questions
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -25,9 +26,9 @@ class QuizActivity : AppCompatActivity() {
     }
     private val quizViewModel: QuizViewModel by viewModel()
 
-    private var quizContentAdapter: QuizContentAdapter? = null
+    private var questionAdapter: QuestionAdapter? = null
 
-    private var optionListBottomList: OptionListBottomList? = null
+    private var setAnswerKeyAdapter: setAnswerKeyAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,6 @@ class QuizActivity : AppCompatActivity() {
 
         setUpObserver()
         setUpListener()
-
     }
 
     private fun setUpObserver() {
@@ -45,35 +45,55 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun setUpAdapter(questionList: List<Questions>?) {
-        quizContentAdapter = QuizContentAdapter(
+        questionAdapter = QuestionAdapter(
             questionList = questionList?.toMutableList() ?: mutableListOf(),
             addNewOption = ::addNewOption,
             deleteOption = ::removeOption,
             deleteQuestion = ::removeQuestion,
             questionTitleChange = ::onQuestionTitleChange,
             optionTitleChange = ::onOptionTextChange,
-            addAnotherQuestion = ::addAnotherOption,
+            addAnotherQuestion = ::addQuestion,
             copyQuestion = ::copyQuestion,
             onOptionSelected = ::onOptionSelected,
             setAnswerKey = ::setAnswerKey
         )
-        binding.uiRvQuestion.adapter = quizContentAdapter
+
+
+        binding.uiRvQuestion.adapter = questionAdapter
         (binding.uiRvQuestion.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
     }
 
-
     private fun setUpListener() {
         binding.uiBtAddQuestions.setOnClickListener {
-            quizViewModel.getQuiz()
+            Log.e("size", quizViewModel.quizDataList.value?.size.toString())
+            val listSize = quizViewModel.quizDataList.value?.size
+            if (listSize != null) {
+                if(listSize <= 3)
+                    quizViewModel.addQuiz()
+                else
+                    Toast.makeText(this,"You are only allowed to Create Only 4 Questions ",Toast.LENGTH_SHORT).show()
+            }
         }
+
     }
 
-    private fun addAnotherOption() {
-        quizViewModel.getQuiz()
+    private fun addQuestion() {
+        if(quizViewModel.quizDataList.value!!.size <= 3){
+            quizViewModel.addQuiz()
+        }else{
+            Toast.makeText(this,"maximum Four Questions allowed ",Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun addNewOption(questionPosition: Int) {
-        quizViewModel.addOption(questionPosition)
+        val optionSize = quizViewModel.quizDataList.value?.get(questionPosition)?.options?.size
+        if (optionSize != null) {
+            if(optionSize <= 3)
+                quizViewModel.addOption(questionPosition)
+            else
+                Toast.makeText(this,"don't create more than 4 options",Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun removeOption(questionPosition: Int, optionPosition: Int) {
@@ -93,41 +113,70 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun copyQuestion(questionCardPosition: Int, questions: Questions) {
-        quizViewModel.copyQuestion(questionCardPosition, questions)
+        val listSize = quizViewModel.quizDataList.value?.size
+        if (listSize != null) {
+            if(listSize <= 3)
+                quizViewModel.copyQuestion(questionCardPosition, questions)
+            else
+                Toast.makeText(this,"You are only allowed to Create Only 4 Questions ",Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun onOptionSelected(questionPosition: Int, optionPosition: Int) {
+    private fun onOptionSelected(questionPosition: Int, optionPosition: String) {
         quizViewModel.onOptionSelected(questionPosition, optionPosition)
     }
 
+    @SuppressLint("InflateParams")
     private fun setAnswerKey(questionPosition: Int) {
         val question = quizViewModel.quizDataList.value
-        question?.get(questionPosition)?.let { Log.e("listData", it.options.toString()) }
 
-        optionListBottomList = OptionListBottomList(
-            optionList = question?.get(questionPosition)?.options ?: mutableListOf(),
-            onOptionSelected = { option ->
-                onOoptionSelectedFromBottomList(questionPosition, option)
+        val questionName = question?.get(questionPosition)?.questionTitle
+        if(questionName?.isNotEmpty() == true){
+            val view = layoutInflater.inflate(R.layout.options_select_bottomsheet, null)
+            val optionsRv = view.findViewById<RecyclerView>(R.id.uiRvBtmOptionSelect)
+            val dialog = BottomSheetDialog(this)
+            val btnClose = view.findViewById<ImageView>(R.id.uiIvBottomCloseClose)
+            val questionTitle = view.findViewById<TextView>(R.id.uiTvBtmQuestionName)
+
+            if(question[questionPosition].options.size >= 3){
+
+                var optionEmpty = false
+                question[questionPosition].options.forEach { options->
+                    if(options.option?.isEmpty() == true)
+                        optionEmpty=true
+                }
+                if(optionEmpty){
+                    Toast.makeText(this,"Please Enter Options..",Toast.LENGTH_SHORT).show()
+                }else{
+                    setAnswerKeyAdapter = setAnswerKeyAdapter(
+                        optionList = question[questionPosition].options,
+                        onAnswerKeySelected = { option ->
+                            onOptionSelectedFromBottomList(questionPosition, option)
+                            dialog.dismiss()
+                        }
+                    )
+                    optionsRv.adapter = setAnswerKeyAdapter
+                    questionTitle.text =
+                        ("${questionPosition + 1}, " + question[questionPosition].questionTitle)
+                    btnClose.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.setCancelable(false)
+                    dialog.setContentView(view)
+                    dialog.show()
+                }
+
+            }else{
+                Toast.makeText(this,"Minimum 3 Option Required..",Toast.LENGTH_SHORT).show()
             }
-        )
-        val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.options_select_bottomsheet, null)
-        val btnClose = view.findViewById<ImageView>(R.id.uiIvBottomCloseClose)
-        val questionTitle = view.findViewById<TextView>(R.id.uiTvBtmQuestionName)
-        questionTitle.text ="${questionPosition+1}, "+ question?.get(questionPosition)?.questionTitle ?: ""
-        btnClose.setOnClickListener {
-            dialog.dismiss()
+
+        }else{
+            Toast.makeText(this@QuizActivity,"Question Name Required",Toast.LENGTH_LONG).show()
         }
-        dialog.setCancelable(false)
-        dialog.setContentView(view)
-        val optionsRv = view.findViewById<RecyclerView>(R.id.uiRvBtmOptionSelect)
-        optionsRv.adapter = optionListBottomList
-        dialog.show()
     }
 
-    private fun onOoptionSelectedFromBottomList(questionPosition: Int, optionPosition: Int) {
-        quizViewModel.onOptionSelected(questionPosition, optionPosition)
+    private fun onOptionSelectedFromBottomList(questionPosition: Int, optionId: String) {
+        quizViewModel.onOptionSelected(questionPosition, optionId)
     }
-
 
 }

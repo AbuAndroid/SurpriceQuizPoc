@@ -6,11 +6,13 @@ data class Quiz(
 )
 
 data class Questions(
+    var questionId:String?,
     var questionTitle:String?,
     val options: MutableList<Options>
 )
 
 data class Options(
+    var optionId:String?,
     var option : String?,
     var isAnswer : Boolean = false,
 )

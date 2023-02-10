@@ -1,7 +1,6 @@
 package com.example.surpricequizpoc.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,15 +11,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surpricequizpoc.R
 import com.example.surpricequizpoc.model.Options
-import java.security.cert.PKIXRevocationChecker.Option
 
 
-class OptionContentAdapter(
+class OptionsAdapter(
     private val optionList : MutableList<Options>,
     private val deleteOptionItem : (Int)->Unit,
     private val onOptionTitleChange: (String,Int) -> Unit,
-    private val onOptionSelected:(Int)-> Unit
-): RecyclerView.Adapter<OptionContentAdapter.ViewHolder>() {
+   // private val onOptionSelected:(String)-> Unit
+): RecyclerView.Adapter<OptionsAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,6 +33,7 @@ class OptionContentAdapter(
             uiEtoption.hint = "option ${position+1} : "
             uiEtoption.setText(layoutposition.option)
             uiRbOptions.isChecked = layoutposition.isAnswer
+            uiRbOptions.isEnabled=false
         }
     }
 
@@ -45,10 +44,6 @@ class OptionContentAdapter(
         val uiIvDeleteOption:ImageView = itemView.findViewById(R.id.uiIvClearQuestion)
 
         init {
-            uiRbOptions.setOnClickListener {
-                onOptionSelected(adapterPosition)
-                notifyDataSetChanged()
-            }
             uiIvDeleteOption.setOnClickListener {
                 deleteOptionItem(adapterPosition)
                 notifyDataSetChanged()
