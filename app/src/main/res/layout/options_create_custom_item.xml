@@ -10,9 +10,10 @@
         android:id="@+id/uiRgOptions"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginHorizontal="5dp"
+
         app:layout_constraintEnd_toStartOf="@id/uiEtoption">
         <RadioButton
             android:id="@+id/uiRbOptions"
@@ -28,12 +29,12 @@
         android:textSize="16sp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/uiRgOptions"
-        app:layout_constraintEnd_toStartOf="@+id/uiIvOptionImage"
+        app:layout_constraintEnd_toStartOf="@+id/uiIvOptionSelectImage"
         app:layout_constraintStart_toEndOf="@id/uiRgOptions"
         app:layout_constraintTop_toTopOf="@id/uiRgOptions" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/uiIvOptionImage"
+        android:id="@+id/uiIvOptionSelectImage"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginHorizontal="10dp"
@@ -52,6 +53,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_close" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/uiIvOptionImage"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginVertical="20dp"
+        android:visibility="gone"
+        android:background="@drawable/border_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/uiIvClearQuestion"
+        app:layout_constraintStart_toStartOf="@+id/uiRgOptions"
+        app:layout_constraintTop_toBottomOf="@+id/uiEtoption"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.surpricequizpoc.ui
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,6 +29,7 @@ class QuizViewModel : ViewModel() {
                 Options(
                     optionId = System.currentTimeMillis().toString(),
                     option = "",
+                    optionImage = "",
                     isAnswer = false
                 )
             )
@@ -38,17 +40,24 @@ class QuizViewModel : ViewModel() {
 
     fun addOption(questionPosition: Int) {
         val question = questionList[questionPosition]
-        val option = Options(optionId = System.currentTimeMillis().toString(),option = "",isAnswer = false)
+        val option = Options(optionId = System.currentTimeMillis().toString(),option = "",  optionImage = "",isAnswer = false)
         question.options.add(option)
         quizDataListLd.value = questionList
     }
 
-
-    fun addQuestionImage(questionPosition: Int, questionImage: Uri) {
+    fun addQuestionImage(questionPosition: Int, questionImage: Uri?) {
         val question = questionList[questionPosition]
         question.questionImage = questionImage.toString()
         quizDataListLd.value = questionList
     }
+
+    fun addOptionImage(questionPosition: Int, optionPosition: Int, optionImage: Uri?) {
+        val question = questionList[questionPosition]
+        val option = question.options[optionPosition]
+        option.optionImage = optionImage.toString()
+        quizDataListLd.value = questionList
+    }
+
     fun removeOption(questionPosition: Int, optionPosition: Int) {
         questionList[questionPosition].options.removeAt(optionPosition)
         quizDataListLd.value = questionList
@@ -62,7 +71,6 @@ class QuizViewModel : ViewModel() {
     fun onQuestionTitleChange(questionTile: String, questionPosition: Int) {
         val question = questionList[questionPosition]
         question.questionTitle = questionTile
-
     }
 
     fun onOptionTextChange(optionText: String, questionPosition: Int, optionPosition: Int) {
@@ -76,13 +84,14 @@ class QuizViewModel : ViewModel() {
             Options(
                 optionId = System.currentTimeMillis().toString()+index,
                 option = option.option,
+                optionImage = option.optionImage,
                 isAnswer = option.isAnswer
             )
         }
         val questionCard = Questions(
             questionId = System.currentTimeMillis().toString(),
             questionTitle = questions.questionTitle,
-            questionImage = "",
+            questionImage = questions.questionImage,
             options = optionList.toMutableList()
         )
         questionList.add(questionCardPosition+1,questionCard)

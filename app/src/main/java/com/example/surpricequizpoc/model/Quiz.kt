@@ -17,5 +17,6 @@ data class Questions(
 data class Options(
     var optionId:String?,
     var option : String?,
+    var optionImage:String?,
     var isAnswer : Boolean = false,
 )
