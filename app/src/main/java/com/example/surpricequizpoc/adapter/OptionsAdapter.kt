@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RadioButton
+import androidx.core.net.toUri
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.surpricequizpoc.R
@@ -17,7 +18,7 @@ class OptionsAdapter(
     private val optionList : MutableList<Options>,
     private val deleteOptionItem : (Int)->Unit,
     private val onOptionTitleChange: (String,Int) -> Unit,
-   // private val onOptionSelected:(String)-> Unit
+    private val getOptionImage:(Int)->Unit
 ): RecyclerView.Adapter<OptionsAdapter.ViewHolder>() {
 
 
@@ -28,28 +29,43 @@ class OptionsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val layoutposition = optionList[position]
+        val optionPosition = optionList[position]
         with(holder){
-            uiEtoption.hint = "option ${position+1} : "
-            uiEtoption.setText(layoutposition.option)
-            uiRbOptions.isChecked = layoutposition.isAnswer
+            uiEtOption.hint = "option ${position+1} : "
+            uiEtOption.setText(optionPosition.option)
+            uiRbOptions.isChecked = optionPosition.isAnswer
             uiRbOptions.isEnabled=false
+            uiIvOptionImage.setImageURI(optionPosition.optionImage?.toUri())
+//            if(optionPosition.option?.isNotEmpty()==true)
+//                uiIvOptionImage.visibility=View.VISIBLE
+//            else
+//                uiIvOptionImage.visibility=View.GONE
+
+            if(optionList[adapterPosition].optionImage?.isNotEmpty()==true){
+                uiIvOptionImage.visibility=View.VISIBLE
+            }else{
+                uiIvOptionImage.visibility=View.GONE
+            }
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val uiRbOptions:RadioButton = itemView.findViewById(R.id.uiRbOptions)
-        val uiEtoption:EditText = itemView.findViewById(R.id.uiEtoption)
-        val uiIvDeleteOption:ImageView = itemView.findViewById(R.id.uiIvClearQuestion)
-
+        val uiEtOption:EditText = itemView.findViewById(R.id.uiEtoption)
+        private val uiIvOptionSelectImage:ImageView = itemView.findViewById(R.id.uiIvOptionSelectImage)
+        private val uiIvDeleteOption:ImageView = itemView.findViewById(R.id.uiIvClearQuestion)
+        val uiIvOptionImage:ImageView = itemView.findViewById(R.id.uiIvOptionImage)
         init {
             uiIvDeleteOption.setOnClickListener {
                 deleteOptionItem(adapterPosition)
                 notifyDataSetChanged()
             }
-
-            uiEtoption.doAfterTextChanged {
+            uiIvOptionSelectImage.setOnClickListener {
+                getOptionImage(adapterPosition)
+                notifyDataSetChanged()
+            }
+            uiEtOption.doAfterTextChanged {
                 onOptionTitleChange(it.toString(),adapterPosition)
             }
         }

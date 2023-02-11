@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -15,8 +14,10 @@ import com.example.surpricequizpoc.R
 import com.example.surpricequizpoc.adapter.setAnswerKeyAdapter
 import com.example.surpricequizpoc.adapter.QuestionAdapter
 import com.example.surpricequizpoc.databinding.ActivityMainBinding
+
 import com.example.surpricequizpoc.model.Questions
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,17 +33,36 @@ class QuizActivity : AppCompatActivity() {
 
     private var setAnswerKeyAdapter: setAnswerKeyAdapter? = null
 
-    var questionImage:Uri?=null
-    private val resultPermissionLauncher by lazy {
-        registerForActivityResult(ActivityResultContracts.GetContent()){
-            questionImage=it
+    private var questionImage: Uri? = null
+
+    private var questionPosition:Int?=null
+
+    private var optionPosition:Int?=null
+
+    private val requestToQuestionImage by lazy {
+        registerForActivityResult(ActivityResultContracts.GetContent()) { questionImageFromGallery ->
+            questionPosition?.let { quizViewModel.addQuestionImage(it, questionImage = questionImageFromGallery) }
+        }
+    }
+
+    private val requestToOptionImage by lazy {
+        registerForActivityResult(ActivityResultContracts.GetContent()) { optionImageFromGallery ->
+            optionPosition?.let {
+                questionPosition?.let { it1 ->
+                    quizViewModel.addOptionImage(
+                        it1,
+                        it, optionImage = optionImageFromGallery)
+                }
+            }
+
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        resultPermissionLauncher
+        requestToQuestionImage
+        requestToOptionImage
         setUpObserver()
         setUpListener()
     }
@@ -65,9 +85,17 @@ class QuizActivity : AppCompatActivity() {
             copyQuestion = ::copyQuestion,
             onOptionSelected = ::onOptionSelected,
             setAnswerKey = ::setAnswerKey,
-            getQuestionImage = ::getQuestionImage
-        )
+            getQuestionImage = { questionAdapterPosition ->
+                requestToQuestionImage.launch("image/*")
+                questionPosition = questionAdapterPosition
 
+            },
+            getOptionImage = { questionAdapterPosition, optionAdapterPosition ->
+                requestToOptionImage.launch("image/*")
+                questionPosition = questionAdapterPosition
+                optionPosition = optionAdapterPosition
+            }
+        )
 
         binding.uiRvQuestion.adapter = questionAdapter
         (binding.uiRvQuestion.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -78,24 +106,29 @@ class QuizActivity : AppCompatActivity() {
             Log.e("size", quizViewModel.quizDataList.value?.size.toString())
             val listSize = quizViewModel.quizDataList.value?.size
             if (listSize != null) {
-                if(listSize <= 3)
+                if (listSize <= 3)
                     quizViewModel.addQuiz()
                 else
-                    Toast.makeText(this,"You are only allowed to Create Only 4 Questions ",Toast.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        binding.root,
+                        "You are only allowed to Create Only 4 Questions ",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
             }
         }
 
         binding.uiBtCancel.setOnClickListener {
-             resultPermissionLauncher.launch("image/*")
+            requestToQuestionImage.launch("image/*")
         }
 
     }
 
     private fun addQuestion() {
-        if(quizViewModel.quizDataList.value!!.size <= 3){
+        if (quizViewModel.quizDataList.value!!.size <= 3) {
             quizViewModel.addQuiz()
-        }else{
-            Toast.makeText(this,"maximum Four Questions allowed ",Toast.LENGTH_SHORT).show()
+        } else {
+            Snackbar.make(binding.root, "maximum Four Questions allowed ", Snackbar.LENGTH_SHORT)
+                .show()
         }
 
     }
@@ -103,10 +136,14 @@ class QuizActivity : AppCompatActivity() {
     private fun addNewOption(questionPosition: Int) {
         val optionSize = quizViewModel.quizDataList.value?.get(questionPosition)?.options?.size
         if (optionSize != null) {
-            if(optionSize <= 3)
+            if (optionSize <= 3)
                 quizViewModel.addOption(questionPosition)
             else
-                Toast.makeText(this,"don't create more than 4 options",Toast.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    "don't create more than 4 options",
+                    Snackbar.LENGTH_SHORT
+                ).show()
         }
     }
 
@@ -129,10 +166,14 @@ class QuizActivity : AppCompatActivity() {
     private fun copyQuestion(questionCardPosition: Int, questions: Questions) {
         val listSize = quizViewModel.quizDataList.value?.size
         if (listSize != null) {
-            if(listSize <= 3)
+            if (listSize <= 3)
                 quizViewModel.copyQuestion(questionCardPosition, questions)
             else
-                Toast.makeText(this,"You are only allowed to Create Only 4 Questions ",Toast.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    "You are only allowed to Create Only 4 Questions ",
+                    Snackbar.LENGTH_SHORT
+                ).show()
         }
     }
 
@@ -140,35 +181,27 @@ class QuizActivity : AppCompatActivity() {
         quizViewModel.onOptionSelected(questionPosition, optionPosition)
     }
 
-    private fun getQuestionImage(questionPostion: Int) {
-        resultPermissionLauncher.launch("image/*")
-        questionImage?.let { quizViewModel.addQuestionImage(questionPostion, questionImage = it) }
-        Toast.makeText(this@QuizActivity,questionPostion.toString(),Toast.LENGTH_SHORT).show()
-    }
-
-
     @SuppressLint("InflateParams")
     private fun setAnswerKey(questionPosition: Int) {
         val question = quizViewModel.quizDataList.value
 
         val questionName = question?.get(questionPosition)?.questionTitle
-        if(questionName?.isNotEmpty() == true){
+        if (questionName?.isNotEmpty() == true) {
             val view = layoutInflater.inflate(R.layout.options_select_bottomsheet, null)
             val optionsRv = view.findViewById<RecyclerView>(R.id.uiRvBtmOptionSelect)
             val dialog = BottomSheetDialog(this)
             val btnClose = view.findViewById<ImageView>(R.id.uiIvBottomCloseClose)
             val questionTitle = view.findViewById<TextView>(R.id.uiTvBtmQuestionName)
 
-            if(question[questionPosition].options.size >= 3){
-
-                var optionEmpty = false
-                question[questionPosition].options.forEach { options->
-                    if(options.option?.isEmpty() == true)
-                        optionEmpty=true
+            if (question[questionPosition].options.size >= 3) {
+                var isOptionEmpty = false
+                question[questionPosition].options.forEach { options ->
+                    if (options.option?.isEmpty() == true)
+                        isOptionEmpty = true
                 }
-                if(optionEmpty){
-                    Toast.makeText(this,"Please Enter Options..",Toast.LENGTH_SHORT).show()
-                }else{
+                if (isOptionEmpty) {
+                    Snackbar.make(binding.root, "Please Enter Options..", Snackbar.LENGTH_SHORT).show()
+                } else {
                     setAnswerKeyAdapter = setAnswerKeyAdapter(
                         optionList = question[questionPosition].options,
                         onAnswerKeySelected = { option ->
@@ -177,8 +210,7 @@ class QuizActivity : AppCompatActivity() {
                         }
                     )
                     optionsRv.adapter = setAnswerKeyAdapter
-                    questionTitle.text =
-                        ("${questionPosition + 1}, " + question[questionPosition].questionTitle)
+                    questionTitle.text = ("${questionPosition + 1}, " + question[questionPosition].questionTitle)
                     btnClose.setOnClickListener {
                         dialog.dismiss()
                     }
@@ -187,12 +219,11 @@ class QuizActivity : AppCompatActivity() {
                     dialog.show()
                 }
 
-            }else{
-                Toast.makeText(this,"Minimum 3 Option Required..",Toast.LENGTH_SHORT).show()
+            } else {
+                Snackbar.make(binding.root, "Minimum 3 Option Required..", Snackbar.LENGTH_SHORT).show()
             }
-
-        }else{
-            Toast.makeText(this@QuizActivity,"Question Name Required",Toast.LENGTH_LONG).show()
+        } else {
+            Snackbar.make(binding.root, "Question Name Required", Snackbar.LENGTH_SHORT).show()
         }
     }
 
