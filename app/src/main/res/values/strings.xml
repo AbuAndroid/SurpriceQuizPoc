@@ -4,4 +4,8 @@
     <string name="str_cancel">Quiz Title</string>
     <string name="str_quiz_title">Quiz Title</string>
     <string name="str_text_cancel">Cancel</string>
+
+    <string name="temp_images_dir">temp_images</string>
+    <string name="temp_image">temp_image.jpg</string>
+    <string name="authorities">com.example.surpricequizpoc</string>
 </resources>
